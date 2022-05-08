@@ -1,0 +1,50 @@
+SECTION="NetPing modules"
+CATEGORY="Base"
+TITLE="OWRT-PLIB-schedule"
+
+PKG_NAME="OWRT-PLIB-icmplib"
+PKG_VERSION=1.1.0-1
+PKG_RELEASE=1
+PKG_DEPENDS=
+
+MODULE_NAME=owrt_plib_schedule
+MODULE_FILES=schedule schedule-1.1.0.dist-info
+MODULE_FILES_DIR?=/usr/lib/python3.7/site-packages/
+
+INSTALL_DIR=
+
+TESTS_SRC_DIR=Tests
+
+all: build preinstall install configure
+
+ipk: build install
+
+preinstall:
+	@echo "Nothing to do"
+
+configure:
+	@echo "Nothing to do"
+
+build:
+	@echo "Nothing to do"
+
+install:
+	for f in $(MODULE_FILES); do rm -rf $(INSTALL_DIR)$(MODULE_FILES_DIR)$${f}; done
+
+ifeq ($(origin INSTALL_DIR),command line)
+	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}
+else
+	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}
+endif
+	for f in $(MODULE_FILES); do cp -r $${f} $(INSTALL_DIR)$(MODULE_FILES_DIR); done
+ifeq ($(origin INSTALL_DIR),command line)
+	cp -r $(TESTS_SRC_DIR) $(INSTALL_DIR)$(MODULE_FILES_DIR)
+endif
+
+clean:
+ifeq ($(origin INSTALL_DIR),command line)
+	rm -rf $(INSTALL_DIR)
+else
+	for f in $(MODULE_FILES); do rm -rf $(INSTALL_DIR)$(MODULE_FILES_DIR)$${f}; done
+	$(if $(strip $(INSTALL_DIR)),rm -r $(INSTALL_DIR),)
+endif
