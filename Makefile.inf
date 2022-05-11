@@ -2,9 +2,9 @@ SECTION="NetPing modules"
 CATEGORY="Base"
 TITLE="OWRT-PLIB-schedule"
 
-PKG_NAME="OWRT-PLIB-icmplib"
+PKG_NAME="OWRT-PLIB-schedule"
 PKG_VERSION=1.1.0-1
-PKG_RELEASE=2
+PKG_RELEASE=3
 PKG_DEPENDS=
 
 MODULE_NAME=owrt_plib_schedule
@@ -13,7 +13,7 @@ MODULE_FILES_DIR?=/usr/lib/python3.7/site-packages/
 
 INSTALL_DIR=
 
-TESTS_SRC_DIR=Tests
+TESTS_SRC_DIR=Tests/
 
 all: build preinstall install configure
 
@@ -33,18 +33,19 @@ install:
 
 ifeq ($(origin INSTALL_DIR),command line)
 	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}
+	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}/$(MODULE_NAME)
 else
 	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}
+	mkdir -p $(INSTALL_DIR)${MODULE_FILES_DIR}/$(MODULE_NAME)
 endif
 	for f in $(MODULE_FILES); do cp -r $${f} $(INSTALL_DIR)$(MODULE_FILES_DIR); done
-ifeq ($(origin INSTALL_DIR),command line)
-	cp -r $(TESTS_SRC_DIR) $(INSTALL_DIR)$(MODULE_FILES_DIR)
-endif
+	cp -r $(TESTS_SRC_DIR) $(INSTALL_DIR)$(MODULE_FILES_DIR)$(MODULE_NAME)/$(TESTS_SRC_DIR)
 
 clean:
 ifeq ($(origin INSTALL_DIR),command line)
 	rm -rf $(INSTALL_DIR)
 else
 	for f in $(MODULE_FILES); do rm -rf $(INSTALL_DIR)$(MODULE_FILES_DIR)$${f}; done
+	rm -r $(INSTALL_DIR)$(MODULE_FILES_DIR)$(MODULE_NAME)
 	$(if $(strip $(INSTALL_DIR)),rm -r $(INSTALL_DIR),)
 endif
